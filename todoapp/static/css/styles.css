@@ -1,0 +1,17 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+table th, table td {
+  vertical-align: middle !important;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}

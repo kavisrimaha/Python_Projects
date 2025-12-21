@@ -1,0 +1,46 @@
+{% extends 'todoapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-center mb-4">Your Tasks</h2>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    {% if tasks %}
+    <table class="table table-bordered align-middle">
+      <thead class="table-primary">
+        <tr>
+          <th>Title</th>
+          
+          <th>Status</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+        <tr>
+          <td>{{ task.title }}</td>
+          
+          <td>
+              {% if task.status %}
+                <span class="badge bg-success">Completed</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">Pending</span>
+              {% endif %}
+
+          </td>
+          <td class="text-center">
+            <a href="{% url 'todoapp:task_update' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <a href="{% url 'todoapp:task_delete' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="text-center text-muted">No tasks found. Click "Add Task" to create one!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

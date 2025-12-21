@@ -1,0 +1,48 @@
+{% extends 'todoapp/base.html' %}
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center mt-5">
+  <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+    <h3 class="text-center mb-4">Login</h3>
+
+    <form method="POST">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="username" 
+          name="username" 
+          placeholder="Enter your username"
+          required
+        >
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="password" 
+          name="password" 
+          placeholder="Enter your password"
+          required
+        >
+      </div>
+
+      {% for message in messages %}
+        <div class="alert alert-danger py-1 text-center" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+
+      <div class="d-grid mt-3">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
