@@ -2,45 +2,105 @@
 {% load static %}
 
 {% block content %}
-<h2 class="text-center mb-4">Schedule</h2>
-
-<div class="card shadow-sm">
-  <div class="card-body">
-    {% if tasks %}
-    <table class="table table-bordered align-middle">
-      <thead class="table-primary">
-        <tr>
-          <th>Title</th>
-          
-          <th>Status</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for task in tasks %}
-        <tr>
-          <td>{{ task.title }}</td>
-          
-          <td>
-              {% if task.status %}
-                <span class="badge bg-success">Completed</span>
-              {% else %}
-                <span class="badge bg-warning text-dark">Pending</span>
-              {% endif %}
-
-          </td>
-          <td class="text-center">
-            <a href="{% url 'todoapp:task_update' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-            <a href="{% url 'todoapp:task_delete' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-      <p class="text-center text-muted">No tasks found. Click "Add Task" to create one!</p>
-    {% endif %}
+<!-- Modern Todo List Header -->
+<div class="modern-header mb-4">
+  <div class="header-content">
+    <div class="header-text">
+      <h1 class="page-title">
+        <span class="title-icon">✓</span>
+        <span>My Tasks</span>
+      </h1>
+      <p class="page-subtitle">
+        {% if tasks %}
+          <span class="task-count">{{ total }}</span> task{{ total|pluralize }} in your list
+        {% else %}
+          Start organizing your day
+        {% endif %}
+      </p>
+    </div>
+    <a href="{% url 'todoapp:task_create' %}" class="btn-add-task">
+      <i class="bi bi-plus-lg"></i>
+      <span>Add Task</span>
+    </a>
   </div>
+  
+  {% if tasks %}
+  <div class="progress-stats">
+    <div class="stat-item">
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value stat-completed">{{ completed }}</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value stat-pending">{{ pending }}</div>
+      <div class="stat-label">Pending</div>
+    </div>
+  </div>
+  {% endif %}
 </div>
+
+{% if tasks %}
+  <div class="modern-task-list">
+    {% for task in tasks %}
+    <div class="modern-task-item {% if task.status %}task-done{% endif %}">
+      <div class="task-checkbox">
+        {% if task.status %}
+          <div class="checkbox-checked">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+        {% else %}
+          <div class="checkbox-unchecked">
+            <i class="bi bi-circle"></i>
+          </div>
+        {% endif %}
+      </div>
+      <div class="task-content">
+        <div class="task-title-wrapper">
+          <h3 class="task-title {% if task.status %}strikethrough{% endif %}">
+            {{ task.title }}
+          </h3>
+        </div>
+        <div class="task-meta">
+          <span class="task-id">#{{ task.id }}</span>
+          {% if task.status %}
+            <span class="task-status-badge completed-badge">
+              <i class="bi bi-check"></i>Done
+            </span>
+          {% else %}
+            <span class="task-status-badge pending-badge">
+              <i class="bi bi-clock"></i>In Progress
+            </span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="task-actions-modern">
+        <a href="{% url 'todoapp:task_update' task.id %}" class="action-btn edit-btn" title="Edit">
+          <i class="bi bi-pencil"></i>
+        </a>
+        <a href="{% url 'todoapp:task_delete' task.id %}" class="action-btn delete-btn" title="Delete">
+          <i class="bi bi-trash"></i>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card empty-card">
+    <div class="card-body">
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <i class="bi bi-inbox"></i>
+        </div>
+        <h3 class="mb-3">No tasks yet!</h3>
+        <p class="text-muted mb-4">Get started by creating your first task</p>
+        <a href="{% url 'todoapp:task_create' %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-2"></i>Create Your First Task
+        </a>
+      </div>
+    </div>
+  </div>
+{% endif %}
 {% endblock %}

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 
 
 
@@ -24,30 +25,38 @@ def user_login(request):
             return redirect('todoapp:task_list')  # redirect after successful login
         else:
             messages.error(request, 'Invalid username or password.')
-            return redirect('login')
+            return redirect('todoapp:login')
     return render(request, 'todoapp/login.html')
 
 #logout 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('todoapp:login')
 #signup
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)  # Log the user in after signup
             return redirect('todoapp:task_list') 
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'todoapp/signup.html', {'form': form})
 
 # read(view the list)
 @login_required
 def task_list(request):
-    tasks = Task.objects.all()
-    return render(request, 'todoapp/task_list.html', {'tasks': tasks})
+    tasks = Task.objects.filter(user=request.user).order_by('-id')
+    total = tasks.count()
+    completed = tasks.filter(status=True).count()
+    pending = total - completed
+    return render(request, 'todoapp/task_list.html', {
+        'tasks': tasks,
+        'total': total,
+        'completed': completed,
+        'pending': pending
+    })
 
 # create new list
 @login_required
@@ -62,8 +71,9 @@ def task_create(request):
     else:
         form = TaskForm()
     return render(request, 'todoapp/task_form.html', {'form': form})
+@login_required
 def task_update(request, pk):
-    task = get_object_or_404(Task, pk=pk)
+    task = get_object_or_404(Task, pk=pk, user=request.user)
 
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
@@ -75,8 +85,9 @@ def task_update(request, pk):
 
     return render(request, 'todoapp/task_form.html', {'form': form})
 
+@login_required
 def task_delete(request, pk):
-    task = get_object_or_404(Task, pk=pk)  # <- raises 404 if not found
+    task = get_object_or_404(Task, pk=pk, user=request.user)  # <- raises 404 if not found
     if request.method == 'POST':
         task.delete()
         return redirect('todoapp:task_list')

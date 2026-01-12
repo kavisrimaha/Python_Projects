@@ -1,15 +1,60 @@
 {% extends 'todoapp/base.html' %}
+{% block body_class %}login-page{% endblock %}
+{% block container_class %}mb-0{% endblock %}
+{% block container_style %}style="padding-bottom: 80px;"{% endblock %}
 {% block content %}
+<style>
+  .navbar {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(10px);
+  }
+  body.login-page {
+    position: relative;
+    background: linear-gradient(135deg, #ffd6e8 0%, #d6e8ff 50%, #e8d6ff 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  body.login-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(8px);
+    opacity: 0.4;
+    z-index: -1;
+  }
+  body.login-page::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 214, 232, 0.6) 0%, rgba(214, 232, 255, 0.6) 50%, rgba(232, 214, 255, 0.6) 100%);
+    z-index: -1;
+  }
+</style>
 
-<div class="container d-flex justify-content-center align-items-center mt-5">
-  <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
-    <h3 class="text-center mb-4">Login</h3>
+<div class="auth-container">
+  <div class="auth-card fade-in">
+    <h1 class="auth-title">
+      <i class="bi bi-box-arrow-in-right me-2"></i>Welcome Back
+    </h1>
+    <p class="auth-subtitle">Sign in to manage your tasks</p>
 
     <form method="POST">
       {% csrf_token %}
       
       <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
+        <label for="username" class="form-label">
+          <i class="bi bi-person me-1"></i>Username
+        </label>
         <input 
           type="text" 
           class="form-control" 
@@ -17,11 +62,14 @@
           name="username" 
           placeholder="Enter your username"
           required
+          autofocus
         >
       </div>
 
       <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label">
+          <i class="bi bi-lock me-1"></i>Password
+        </label>
         <input 
           type="password" 
           class="form-control" 
@@ -33,15 +81,26 @@
       </div>
 
       {% for message in messages %}
-        <div class="alert alert-danger py-1 text-center" role="alert">
-          {{ message }}
+        <div class="alert alert-danger py-2 mb-3" role="alert" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #dc2626;">
+          <i class="bi bi-exclamation-circle me-2"></i>{{ message }}
         </div>
       {% endfor %}
 
-      <div class="d-grid mt-3">
-        <button type="submit" class="btn btn-primary">Login</button>
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+        </button>
       </div>
     </form>
+
+    <div class="text-center mt-3">
+      <p class="text-muted mb-0" style="font-size: 0.875rem;">
+        Don't have an account? 
+        <a href="{% url 'todoapp:signup' %}" class="text-decoration-none fw-bold" style="color: #6366f1;">
+          Sign up here
+        </a>
+      </p>
+    </div>
   </div>
 </div>
 

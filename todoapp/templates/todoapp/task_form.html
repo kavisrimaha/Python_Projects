@@ -1,31 +1,48 @@
 {% extends 'todoapp/base.html' %}
 {% block content %}
-<div class="card shadow-sm mx-auto mt-4" style="max-width: 600px;">
-  <div class="card-body">
-    <h4 class="card-title mb-4 text-center">
-      {% if form.instance.pk %}Edit Task{% else %}Add Task{% endif %}
-    </h4>
 
-    <form method="POST">
-      {% csrf_token %}
+<div class="row justify-content-center">
+  <div class="col-lg-5 col-md-7">
+    <div class="card fade-in">
+      <div class="card-body">
+        <h2 class="text-gradient mb-3 text-center" style="font-size: 1.5rem;">
+          <i class="bi bi-{% if form.instance.pk %}pencil-square{% else %}plus-circle{% endif %} me-2"></i>
+          {% if form.instance.pk %}Edit Task{% else %}Create New Task{% endif %}
+        </h2>
 
-      <div class="mb-3">
-        <label for="id_title" class="form-label">Task Title</label>
-        {{ form.title }}
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="id_title" class="form-label">
+              <i class="bi bi-card-heading me-1"></i>Task Title
+            </label>
+            {{ form.title }}
+            {% if form.title.errors %}
+              <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-check mb-3 p-2" style="background: rgba(248, 250, 252, 0.8); border-radius: 8px;">
+            {{ form.status }}
+            <label for="id_status" class="form-check-label ms-2 fw-medium">
+              <i class="bi bi-check-circle me-1"></i>Mark as Completed
+            </label>
+          </div>
+
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'todoapp:task_list' %}" class="btn btn-secondary">
+              <i class="bi bi-x-circle me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-circle me-1"></i>Save Task
+            </button>
+          </div>
+        </form>
       </div>
-
-      <div class="form-check mb-3">
-        {{ form.status }}
-        <label for="id_status" class="form-check-label">Mark as Completed</label>
-      </div>
-
-      <div class="text-center">
-  <button type="submit" class="btn btn-primary px-4">Save</button>
-  <a href="{% url 'todoapp:task_list' %}" class="btn btn-secondary px-4">Cancel</a>
-</div>
-
-    </form>
+    </div>
   </div>
 </div>
+
 {% endblock %}
  
