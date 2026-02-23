@@ -28,10 +28,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-na8fq=ry0#=ll-_jiezg)
 # Default to DEBUG=True for local development; override with environment variable in production.
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [".onrender.com"]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://python-projects-wstb.onrender.com",
+]
 
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
