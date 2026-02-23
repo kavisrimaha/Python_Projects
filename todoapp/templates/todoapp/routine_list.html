@@ -1,0 +1,71 @@
+{% extends 'todoapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="modern-header mb-4">
+  <div class="header-content">
+    <div class="header-text">
+      <h1 class="page-title">
+        <span class="title-icon">📅</span>
+        <span>Daily Routines</span>
+      </h1>
+      <p class="page-subtitle">
+        {{ today|date:"F d, Y" }}
+      </p>
+    </div>
+    <a href="{% url 'todoapp:routine_create' %}" class="btn-add-task">
+      <i class="bi bi-plus-lg"></i>
+      <span>Add Routine</span>
+    </a>
+  </div>
+</div>
+
+{% if routines %}
+  <div class="modern-task-list">
+    {% for routine in routines %}
+    <div class="modern-task-item {% if routine.id in today_completions %}task-done{% endif %}">
+      <div class="task-checkbox">
+        <a href="{% url 'todoapp:routine_toggle' routine.id %}" style="text-decoration: none; color: inherit;">
+          {% if routine.id in today_completions %}
+            <div class="checkbox-checked">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+          {% else %}
+            <div class="checkbox-unchecked">
+              <i class="bi bi-circle"></i>
+            </div>
+          {% endif %}
+        </a>
+      </div>
+      <div class="task-content">
+        <div class="task-title-wrapper">
+          <h3 class="task-title {% if routine.id in today_completions %}strikethrough{% endif %}">
+            {{ routine.title }}
+          </h3>
+        </div>
+      </div>
+      <div class="task-actions-modern">
+        <a href="{% url 'todoapp:routine_delete' routine.id %}" class="action-btn delete-btn" title="Delete">
+          <i class="bi bi-trash"></i>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card empty-card">
+    <div class="card-body">
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <i class="bi bi-calendar-event"></i>
+        </div>
+        <h3 class="mb-3">No routines yet!</h3>
+        <p class="text-muted mb-4">Set up routines you want to complete daily</p>
+        <a href="{% url 'todoapp:routine_create' %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-2"></i>Create Your First Routine
+        </a>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

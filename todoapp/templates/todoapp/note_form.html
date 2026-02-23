@@ -1,0 +1,47 @@
+{% extends 'todoapp/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0" style="border-radius: 20px;">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="icon-circle mb-3 mx-auto"
+                        style="width: 60px; height: 60px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-journal-plus text-primary fs-3"></i>
+                    </div>
+                    <h2 class="fw-bold">{{ title|default:"Note" }}</h2>
+                </div>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}"
+                            class="form-label fw-semibold text-muted small text-uppercase">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ field.errors|striptags }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-3 fw-bold rounded-pill">
+                            <i class="bi bi-check-circle me-2"></i>Save Note
+                        </button>
+                        <a href="{% url 'todoapp:note_list' %}" class="btn btn-light py-3 fw-bold rounded-pill">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
