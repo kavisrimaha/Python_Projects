@@ -26,9 +26,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-na8fq=ry0#=ll-_jiezg)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Default to DEBUG=True for local development; override with environment variable in production.
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = [".onrender.com"]
+ALLOWED_HOSTS = [
+    "python-projects-wstb.onrender.com",
+    ".onrender.com",
+]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://python-projects-wstb.onrender.com",
